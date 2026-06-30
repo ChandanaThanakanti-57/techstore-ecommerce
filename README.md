@@ -49,3 +49,54 @@ GitHub
 IntelliJ IDEA
 
 ## Screenshots
+...
+
+## Installation Steps
+
+### Clone Repository
+
+```bash
+git clone https://github.com/ChandanaThanakanti-57/techstore-ecommerce.git
+```
+
+### Configure Database
+
+Create a MySQL database:
+
+```sql
+CREATE DATABASE ecommerce;
+```
+
+Update the `application.properties` file with your MySQL database credentials:
+
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/ecommerce
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+```
+
+### Run Application
+
+Using Maven:
+
+```bash
+mvn spring-boot:run
+```
+
+The application will be available at:
+
+http://localhost:8080
+
+## Future Enhancements
+
+* Razorpay Payment Gateway Integration
+* Real-Time Order Tracking
+* Notification Center
+* Sales Forecasting
+* Advanced Product Analytics
+* Mobile App Integration
+* AI-Based Product Recommendations
+* Inventory Forecasting
+* Multi-Vendor Marketplace Support
+* Customer Support Chat System
+
