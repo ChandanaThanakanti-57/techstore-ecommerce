@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        a {
+            display: block;
+            margin: 10px 0;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Admin Dashboard</h1>
+
+<div class="card">
+
+    <p>
+        Total Products:
+        <strong th:text="${productCount}"></strong>
+    </p>
+
+    <p>
+        Total Orders:
+        <strong th:text="${orderCount}"></strong>
+    </p>
+
+    <p>
+        Total Revenue:
+        ₹<strong th:text="${revenue}"></strong>
+    </p>
+
+    <hr>
+
+    <a th:href="@{/products}">📦 View Products</a>
+
+    <a th:href="@{/add-product}">➕ Add Product</a>
+
+    <a th:href="@{/orders}">📋 View Orders</a>
+
+</div>
+
+
+</body>
+</html>

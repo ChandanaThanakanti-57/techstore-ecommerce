@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Coupons</title>
+</head>
+<body>
+
+<h2>Coupon Management</h2>
+<h3>Create Coupon</h3>
+
+<form action="/admin/coupons/add" method="post">
+
+    <input type="text"
+           name="code"
+           placeholder="Coupon Code">
+
+    <input type="number"
+           name="discountPercent"
+           placeholder="Discount %">
+
+    <button type="submit">
+        Add Coupon
+    </button>
+
+</form>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Code</th>
+        <th>Discount %</th>
+        <th>Active</th>
+    </tr>
+
+    <tbody>
+
+    <tr th:each="coupon : ${coupons}">
+
+        <td th:text="${coupon.id}"></td>
+
+        <td th:text="${coupon.code}"></td>
+
+        <td th:text="${coupon.discountPercent}"></td>
+
+        <td th:text="${coupon.active}"></td>
+
+    </tr>
+
+    </tbody>
+
+</table>
+
+</body>
+</html>

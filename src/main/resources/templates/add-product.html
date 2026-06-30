@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Product</title>
+</head>
+<body>
+
+<h1>Add Product</h1>
+
+<form th:action="@{/add-product}"
+      th:object="${product}"
+      method="post"
+      enctype="multipart/form-data">
+
+    <p>
+        Product Name:
+        <input type="text" th:field="*{name}">
+    </p>
+
+    <p>
+        Category:
+        <select th:field="*{category}">
+            <option value="Electronics">Electronics</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Office">Office</option>
+        </select>
+    </p>
+
+    <p>
+        Product Image:
+        <input type="file"
+               name="image"
+               class="form-control">
+    </p>
+
+    <p>
+        Price:
+        <input type="number" th:field="*{price}">
+    </p>
+
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea class="form-control"
+                  th:field="*{description}">
+    </textarea>
+    </div>
+
+    <div class="mb-3">
+        <label>Stock</label>
+        <input type="number"
+               class="form-control"
+               th:field="*{stock}">
+    </div>
+
+    <label>Rating</label>
+
+    <input type="number"
+           name="rating"
+           class="form-control">
+
+    <label>Review</label>
+
+    <textarea name="review"
+              class="form-control"></textarea>
+
+    <button type="submit">
+        Add Product
+    </button>
+
+
+</form>
+
+</body>
+</html>

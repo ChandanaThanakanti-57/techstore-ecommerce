@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Revenue Report</title>
+</head>
+<body>
+
+<h2>Revenue Report</h2>
+
+<form action="/admin/revenue-report"
+      method="get">
+
+    <label>From</label>
+
+    <input type="date"
+           name="startDate">
+
+    <label>To</label>
+
+    <input type="date"
+           name="endDate">
+
+    <button type="submit">
+        Generate Report
+    </button>
+
+</form>
+
+<hr>
+
+<h3>
+    Revenue:
+    ₹<span th:text="${revenue}"></span>
+</h3>
+
+<table border="1">
+
+    <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Amount</th>
+        <th>Date</th>
+    </tr>
+
+    <tr th:each="order : ${orders}">
+
+        <td th:text="${order.id}"></td>
+
+        <td th:text="${order.customerName}"></td>
+
+        <td th:text="${order.totalAmount}"></td>
+
+        <td th:text="${order.orderDate}"></td>
+
+    </tr>
+
+</table>
+
+</body>
+</html>

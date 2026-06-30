@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tech Store Products</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body class="bg-light">
+<p th:if="${user != null}">
+    Welcome,
+    <span th:text="${user.name}"></span>
+</p>
+<a th:href="@{/my-orders}" class="btn btn-primary">
+    My Orders
+</a>
+<a th:href="@{/profile}" class="btn btn-info">
+    Profile
+</a>
+
+<a th:href="@{/logout}" class="btn btn-danger">
+    Logout
+</a>
+<form action="/products/search"
+      method="get"
+      class="row mb-4">
+
+    <div class="col-md-5">
+
+        <input type="text"
+               id="searchBox"
+               name="keyword"
+               class="form-control"
+               placeholder="Search products">
+        <div id="suggestionsBox"
+             class="list-group position-absolute w-100 shadow"
+             style="z-index:1000;">
+        </div>
+
+
+    </div>
+
+    <div class="col-md-4">
+
+        <select name="category"
+                class="form-select">
+
+            <option value="">All Categories</option>
+
+            <option value="Electronics">
+                Electronics
+            </option>
+
+            <option value="Accessories">
+                Accessories
+            </option>
+
+            <option value="Laptop">
+                Laptop
+            </option>
+
+        </select>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <button type="submit"
+                class="btn btn-primary w-100">
+
+            Search
+
+        </button>
+
+    </div>
+
+</form>
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+
+
+        <a class="navbar-brand" th:href="@{/products}">
+            Tech Store
+        </a>
+
+        <div class="navbar-nav">
+            <a class="nav-link" th:href="@{/products}">
+                Products
+            </a>
+
+            <a class="nav-link" th:href="@{/add-product}">
+                Add Product
+            </a>
+
+            <a class="nav-link" th:href="@{/admin}">
+                Admin
+            </a>
+            <a class="nav-link" th:href="@{/login}">
+                Login
+            </a>
+
+            <a class="nav-link" th:href="@{/register}">
+                Register
+            </a>
+        </div>
+
+    </div>
+
+
+</nav>
+
+<div class="container mt-4">
+
+    <h1 class="text-center mb-4">Tech Store Products</h1>
+
+    <a th:href="@{/products}" class="btn btn-secondary mb-3">
+        Show All Products
+    </a>
+
+    <a th:href="@{/add-product}" class="btn btn-success mb-3 ms-2">
+        Add New Product
+    </a>
+
+    <div class="row">
+
+        <div class="col-md-4 mb-4"
+             th:each="product : ${products}">
+
+            <div class="card h-100 shadow-lg border-0">
+
+                <img th:src="${product.imageUrl != null && !product.imageUrl.isEmpty()
+              ? product.imageUrl
+              : 'https://via.placeholder.com/300x220?text=No+Image'}"
+                     class="card-img-top"
+                     style="height:220px; object-fit:cover;"
+                     alt="Product Image">
+
+                <div class="card-body">
+
+                    <h5 class="card-title"
+                        th:text="${product.name}">
+                    </h5>
+
+                    <p class="card-text">
+                        <strong>Category:</strong>
+                        <span th:text="${product.category}"></span>
+                    </p>
+
+                    <p class="card-text text-success fw-bold">
+                        ₹<span th:text="${#numbers.formatDecimal(product.price,1,2)}"></span>
+                    </p>
+
+                    <p class="text-muted">
+                        Product ID:
+                        <span th:text="${product.id}"></span>
+                    </p>
+
+                    <a th:href="@{/edit-product/{id}(id=${product.id})}"
+                       class="btn btn-warning">
+                        Edit
+                    </a>
+
+                    <a th:href="@{/delete-product/{id}(id=${product.id})}"
+                       class="btn btn-danger">
+                        Delete
+                    </a>
+
+                    <a th:href="@{/cart/add/{id}(id=${product.id})}"
+                       class="btn btn-primary mt-2">
+                        Add to Cart
+                    </a>
+                    <a th:href="@{/products/{id}(id=${product.id})}"
+                       class="btn btn-success">
+                        View Details
+                    </a>
+                    <a th:href="@{/profile}" class="btn btn-info">
+                        Profile
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<script>
+
+    const searchBox =
+        document.getElementById("searchBox");
+
+    const suggestionsBox =
+        document.getElementById("suggestionsBox");
+
+    searchBox.addEventListener("keyup", function() {
+
+        let keyword = this.value;
+
+        if(keyword.length < 2){
+
+            suggestionsBox.innerHTML = "";
+
+            return;
+        }
+
+        fetch("/autocomplete?keyword=" + keyword)
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                suggestionsBox.innerHTML = "";
+
+                data.forEach(product => {
+
+                    suggestionsBox.innerHTML += `
+                    <a href="/products/${product.id}"
+                       class="list-group-item list-group-item-action">
+
+                        <div class="d-flex align-items-center">
+
+                            <img src="${product.imageUrl}"
+                                 width="50"
+                                 height="50"
+                                 style="object-fit:cover;
+                                        margin-right:10px;">
+
+                            <div>
+
+                                <div>${product.name}</div>
+
+                                <small class="text-success">
+                                    ₹${product.price}
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </a>
+                `;
+                });
+
+            });
+
+    });
+
+</script>
+
+<script>
+
+    document.addEventListener("click", function(e){
+
+        if(!searchBox.contains(e.target) &&
+            !suggestionsBox.contains(e.target)){
+
+            suggestionsBox.innerHTML = "";
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

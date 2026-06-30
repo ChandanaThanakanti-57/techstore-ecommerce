@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Details</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+</head>
+<body>
+
+<div class="container mt-5">
+
+    <div class="card shadow p-4">
+
+        <div class="row">
+
+            <div class="col-md-5 text-center">
+
+                <img th:src="${product.imageUrl}"
+                     class="img-fluid rounded"
+                     style="max-height:350px;">
+
+            </div>
+
+            <div class="col-md-7">
+
+                <h1 th:text="${product.name}"></h1>
+
+                <h2 class="text-success">
+                    ₹<span th:text="${product.price}"></span>
+                </h2>
+
+                <p>
+                    <strong>Category:</strong>
+                    <span th:text="${product.category}"></span>
+                </p>
+
+                <hr>
+
+                <h4>Description</h4>
+
+                <p th:text="${product.description}">
+                </p>
+
+                <h4>Stock</h4>
+
+                <p class="text-success fw-bold"
+                   th:text="${product.stock}">
+                </p>
+
+                <p>
+                    <strong>ID:</strong>
+                    <span th:text="${product.id}"></span>
+                </p>
+
+                <p th:if="${product.stock != null and product.stock > 0}"
+                   class="text-success fw-bold">
+                    In Stock
+                </p>
+
+                <p th:if="${product.stock == null or product.stock == 0}"
+                   class="text-danger fw-bold">
+                    Out of Stock
+                </p>
+
+                <a th:if="${product.stock != null and product.stock > 0}"
+                   th:href="@{/cart/add/{id}(id=${product.id})}"
+                   class="btn btn-primary">
+                    Add to Cart
+                </a>
+                <a th:href="@{/wishlist/add/{id}(id=${product.id})}"
+                   class="btn btn-danger">
+                    ❤️ Wishlist
+                </a>
+                <button th:if="${product.stock == null or product.stock == 0}"
+                        class="btn btn-secondary"
+                        disabled>
+                    Out of Stock
+                </button>
+
+                <a th:href="@{/products}"
+                   class="btn btn-secondary">
+                    Back
+                </a>
+
+            </div>
+
+        </div>
+
+        <hr class="mt-4">
+
+        <h3>Average Rating</h3>
+
+        <div th:if="${reviews != null and !reviews.isEmpty()}">
+
+            <h4 class="text-warning">
+
+                ⭐ <span th:text="${#numbers.formatDecimal(averageRating,1,1)}"></span>/5
+
+            </h4>
+
+            <p>
+                Based on
+                <span th:text="${reviews.size()}"></span>
+                review(s)
+            </p>
+
+        </div>
+
+        <div th:if="${reviews == null or reviews.isEmpty()}">
+
+            <p>No ratings yet</p>
+
+        </div>
+
+
+        <hr class="mt-4">
+
+        <h3>Write a Review</h3>
+
+        <form th:action="@{/add-review}"
+              method="post">
+
+            <input type="hidden"
+                   name="productId"
+                   th:value="${product.id}">
+
+            <div class="mb-3">
+
+                <label>Rating</label>
+
+                <select name="rating"
+                        class="form-select">
+
+                    <option value="5">★★★★★</option>
+                    <option value="4">★★★★</option>
+                    <option value="3">★★★</option>
+                    <option value="2">★★</option>
+                    <option value="1">★</option>
+
+                </select>
+
+            </div>
+
+            <div class="mb-3">
+
+                <label>Comment</label>
+
+                <textarea name="comment"
+                          class="form-control"
+                          rows="3"
+                          required></textarea>
+
+            </div>
+
+
+            <button type="submit"
+                    class="btn btn-success">
+
+                Submit Review
+
+            </button>
+
+        </form>
+
+        <hr class="mt-4">
+
+        <h4>Customer Ratings</h4>
+
+        <p th:if="${reviews != null and !reviews.isEmpty()}">
+
+            Total Reviews:
+            <span th:text="${reviews.size()}"></span>
+
+        </p>
+
+        <p th:if="${reviews == null or reviews.isEmpty()}">
+
+            No reviews yet
+
+        </p>
+
+        <hr>
+
+        <h3>Customer Reviews</h3>
+
+        <div th:if="${reviews != null and !reviews.isEmpty()}">
+
+            <div class="card mb-3"
+                 th:each="review : ${reviews}">
+
+                <div class="card-body">
+
+                    <h5 th:text="${review.userName}"></h5>
+
+                    <p>
+
+            <span th:if="${review.rating == 5}">
+                ⭐⭐⭐⭐⭐
+            </span>
+
+                        <span th:if="${review.rating == 4}">
+                ⭐⭐⭐⭐
+            </span>
+
+                        <span th:if="${review.rating == 3}">
+                ⭐⭐⭐
+            </span>
+
+                        <span th:if="${review.rating == 2}">
+                ⭐⭐
+            </span>
+
+                        <span th:if="${review.rating == 1}">
+                ⭐
+            </span>
+
+                        (<span th:text="${review.rating}"></span>/5)
+
+                    </p>
+
+                    <p th:text="${review.comment}"></p>
+
+                    <small class="text-muted"
+                           th:if="${review.reviewDate != null}">
+
+            <span th:text="${#temporals.format(
+                    review.reviewDate,
+                    'dd-MMM-yyyy hh:mm a')}">
+            </span>
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div th:if="${reviews == null or reviews.isEmpty()}">
+
+            <p>No reviews available.</p>
+
+        </div>
+
+
+        <hr class="mt-5">
+
+        <h3>Related Products</h3>
+
+        <div class="row mt-3">
+
+            <div class="col-md-3 mb-3"
+                 th:each="p : ${relatedProducts}">
+
+                <div class="card h-100 shadow-sm">
+
+                    <img th:src="${p.imageUrl}"
+                         class="card-img-top"
+                         style="height:200px; object-fit:cover;">
+
+                    <div class="card-body text-center">
+
+                        <h6 th:text="${p.name}"></h6>
+
+                        <p class="text-success fw-bold">
+                            ₹<span th:text="${p.price}"></span>
+                        </p>
+
+                        <a th:href="@{/products/{id}(id=${p.id})}"
+                           class="btn btn-primary btn-sm">
+                            View
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
