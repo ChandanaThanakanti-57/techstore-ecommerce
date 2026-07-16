@@ -35,11 +35,12 @@ public class CheckoutController {
     private final CouponRepository couponRepository;
     private final EmailService emailService;
     private final ProductService productService;
+
     public CheckoutController(
             OrderService orderService,
             CartService cartService,
             ProductRepository productRepository,
-             OrderItemService orderItemService,
+            OrderItemService orderItemService,
             CouponRepository couponRepository,
             EmailService emailService,
             ProductService productService) {
@@ -104,7 +105,7 @@ public class CheckoutController {
 
         Order order = new Order();
 
-        if(paymentStatus == null) {
+        if (paymentStatus == null) {
             paymentStatus = "PAID";
         }
 
@@ -156,31 +157,32 @@ public class CheckoutController {
 
         orderService.saveOrder(order);
 
-        if(user != null){
+        if (user != null) {
 
             emailService.sendOrderConfirmation(
                     user.getEmail(),
                     order.getId(),
                     order.getTotalAmount());
         }
-
-
 // Save order items
         for (CartItem cartItem : cartItems) {
 
+            Product product =
+                    productRepository.findById(
+                                    cartItem.getProductId())
+                            .orElse(null);
+
             OrderItem item = new OrderItem();
 
-            item.setProductId(
-                    cartItem.getProductId());
+            item.setProductId(cartItem.getProductId());
+            item.setProductName(cartItem.getProductName());
+            item.setPrice(cartItem.getPrice());
+            item.setQuantity(cartItem.getQuantity());
 
-            item.setProductName(
-                    cartItem.getProductName());
-
-            item.setPrice(
-                    cartItem.getPrice());
-
-            item.setQuantity(
-                    cartItem.getQuantity());
+            if (product != null) {
+                System.out.println(product.getImageUrl());
+                item.setImageUrl(product.getImageUrl());
+            }
 
             item.setOrder(order);
 
@@ -190,14 +192,14 @@ public class CheckoutController {
         cartService.clearCart();
 
         return "order-success";
-
     }
-    @ResponseBody
+
     @GetMapping("/test-email")
-    public String testEmail() {
+    @ResponseBody
+    public String testEmail(@RequestParam String email) {
 
         emailService.sendOrderConfirmation(
-                "vandanathanakanti123@gmail.com",
+                email,
                 999L,
                 1000);
 

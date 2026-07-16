@@ -17,6 +17,8 @@ public class OrderItem {
 
     private int quantity;
 
+    private String imageUrl;
+
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
@@ -62,6 +64,14 @@ public class OrderItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Order getOrder() {

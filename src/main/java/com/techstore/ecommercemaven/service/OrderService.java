@@ -26,6 +26,12 @@ public class OrderService {
         return orderRepository.count();
     }
 
+    public List<Order> getOrdersByUserEmail(String email) {
+
+        return orderRepository
+                .findByUserEmailOrderByOrderDateDesc(email);
+    }
+
     public double getTotalRevenue() {
 
         Double revenue = orderRepository.getTotalRevenue();
@@ -33,9 +39,6 @@ public class OrderService {
         return revenue == null ? 0 : revenue;
     }
 
-    public List<Order> getOrdersByUserEmail(String email) {
-        return orderRepository.findByUserEmail(email);
-    }
     public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }

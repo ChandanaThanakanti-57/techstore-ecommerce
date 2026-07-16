@@ -10,6 +10,7 @@ import java.util.List;
 public interface OrderItemRepository
         extends JpaRepository<OrderItem, Long> {
 
+
     @Query("""
     SELECT new com.techstore.ecommercemaven.dto.TopProductDTO(
         oi.productName,
@@ -20,5 +21,8 @@ public interface OrderItemRepository
     ORDER BY SUM(oi.quantity) DESC
 """)
     List<TopProductDTO> getTopSellingProducts();
+    List<OrderItem> findByOrderId(Long orderId);
+
+
 
 }

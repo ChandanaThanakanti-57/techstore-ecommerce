@@ -16,6 +16,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByCustomerNameContainingIgnoreCase(
             String customerName);
     List<Order> findByStatus(String status);
+    List<Order> findByUserEmailOrderByOrderDateDesc(String userEmail);
+
 
     @Query("SELECT SUM(o.totalAmount) FROM Order o")
     Double getTotalRevenue();
