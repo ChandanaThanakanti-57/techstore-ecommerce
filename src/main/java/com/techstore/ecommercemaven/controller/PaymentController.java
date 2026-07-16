@@ -16,7 +16,6 @@ public class PaymentController {
 
         this.razorpayClient = razorpayClient;
     }
-
     @PostMapping("/create-order")
     public String createOrder(
             @RequestParam double amount)

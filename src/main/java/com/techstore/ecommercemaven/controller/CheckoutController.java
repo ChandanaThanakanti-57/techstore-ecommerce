@@ -68,9 +68,14 @@ public class CheckoutController {
             @RequestParam(required = false)
             String couponCode,
 
-            @RequestParam String razorpayPaymentId,
+            @RequestParam(required = false)
+            String razorpayPaymentId,
 
-            @RequestParam String razorpayOrderId,
+            @RequestParam(required = false)
+            String razorpayOrderId,
+
+            @RequestParam(required = false)
+            String paymentStatus,
 
             HttpSession session) {
 
@@ -98,6 +103,10 @@ public class CheckoutController {
         }
 
         Order order = new Order();
+
+        if(paymentStatus == null) {
+            paymentStatus = "PAID";
+        }
 
         order.setCustomerName(customerName);
         order.setAddress(address);
@@ -147,26 +156,6 @@ public class CheckoutController {
 
         orderService.saveOrder(order);
 
-        /*Payment payment =
-                new Payment();
-
-        payment.setOrderId(
-                order.getId());
-
-        payment.setRazorpayPaymentId(
-                razorpayPaymentId);
-
-        payment.setRazorpayOrderId(
-                razorpayOrderId);
-
-        payment.setStatus(
-                "SUCCESS");
-
-        payment.setAmount(
-                order.getTotalAmount());
-
-        paymentRepository.save(payment);*/
-
         if(user != null){
 
             emailService.sendOrderConfirmation(
@@ -175,11 +164,6 @@ public class CheckoutController {
                     order.getTotalAmount());
         }
 
-        emailService.sendOrderConfirmation(
-                order.getUserEmail(),
-                order.getId(),
-                order.getTotalAmount()
-        );
 
 // Save order items
         for (CartItem cartItem : cartItems) {

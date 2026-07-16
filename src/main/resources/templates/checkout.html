@@ -13,7 +13,9 @@
 
     <h1>Checkout</h1>
 
-    <form th:action="@{/place-order}" method="post">
+    <form id="checkoutForm"
+          th:action="@{/place-order}"
+          method="post">
 
         <div class="mb-3">
             <label class="form-label">Customer Name</label>
@@ -51,79 +53,40 @@
         <input type="hidden"
                id="razorpayOrderId"
                name="razorpayOrderId">
+        <input type="hidden"
+               id="paymentStatus"
+               name="paymentStatus"
+               value="PENDING">
 
-        <button type="submit"
+        <button type="button"
+                onclick="mockPayment()"
                 class="btn btn-success">
-            Place Order
+            Pay Now
         </button>
 
     </form>
 
 
 </div>
-<!--
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>-->
-<!--
-<script th:inline="javascript">
+<script>
 
-    document.getElementById("payBtn")
-        .addEventListener("click", function () {
+    function mockPayment() {
 
-            const amount =
-                [[${cartTotal}]];
+        if(confirm(
+            "Mock Payment Successful?\n\nClick OK to simulate payment."
+        )) {
 
-            fetch(
-                "/payment/create-order?amount=" +
-                amount,
-                {
-                    method: "POST"
-                })
-                .then(response => response.json())
-                .then(order => {
+            document.getElementById(
+                "paymentStatus"
+            ).value = "PAID";
 
-                    var options = {
+            document.getElementById(
+                "checkoutForm"
+            ).submit();
+        }
+    }
 
-                        key:
-                            "rzp_test_xxxxx",
-
-                        amount:
-                        order.amount,
-
-                        currency:
-                        order.currency,
-
-                        name:
-                            "Tech Store",
-
-                        description:
-                            "Order Payment",
-
-                        order_id:
-                        order.id,
-
-                        handler: function(response) {
-
-                            document.getElementById(
-                                "razorpayPaymentId"
-                            ).value =
-                                response.razorpay_payment_id;
-
-                            document.getElementById(
-                                "razorpayOrderId"
-                            ).value =
-                                response.razorpay_order_id;
-
-                            document.forms[0].submit();
-                        }
-
-                    var rzp =
-                        new Razorpay(options);
-
-                    rzp.open();
-                });
-        });
-
-</script>-->
+</script>
 
 </body>
 </html>
