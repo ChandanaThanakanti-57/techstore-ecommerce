@@ -77,4 +77,25 @@ public class ReviewController {
         return "redirect:/products/" + productId;
     }
 
+    @GetMapping("/admin/review/approve/{id}")
+    public String approveReview(@PathVariable Long id) {
+
+        Review review = reviewRepository.findById(id).orElse(null);
+
+        if (review != null) {
+            review.setApproved(true);
+            reviewRepository.save(review);
+        }
+
+        return "redirect:/admin/reviews";
+    }
+
+    @GetMapping("/admin/review/delete/{id}")
+    public String deleteReview(@PathVariable Long id) {
+
+        reviewRepository.deleteById(id);
+
+        return "redirect:/admin/reviews";
+    }
+
 }

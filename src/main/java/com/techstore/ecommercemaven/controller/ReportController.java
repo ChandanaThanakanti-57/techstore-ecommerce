@@ -20,6 +20,11 @@ import java.util.List;
 @Controller
 public class ReportController {
 
+    @GetMapping("/admin/reports")
+    public String reports() {
+        return "admin/reports";
+    }
+
     private final OrderRepository orderRepository;
 
     public ReportController(OrderRepository orderRepository) {
