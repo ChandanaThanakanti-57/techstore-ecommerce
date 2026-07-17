@@ -79,8 +79,10 @@ public class CheckoutController {
             String paymentStatus,
 
             HttpSession session) {
+        User user =
+                (User) session.getAttribute("loggedInUser");
 
-        double total = cartService.getTotal();
+        double total = cartService.getUserTotal(user);
 
         if (couponCode != null && !couponCode.isBlank()) {
 
@@ -97,8 +99,7 @@ public class CheckoutController {
         }
 
         List<CartItem> cartItems =
-                cartService.getAllItems();
-
+                cartService.getUserCart(user);
         if (cartItems.isEmpty()) {
             return "redirect:/cart";
         }
@@ -117,8 +118,7 @@ public class CheckoutController {
         order.setStatus("Paid");
         order.setOrderDate(LocalDateTime.now());
 
-        User user =
-                (User) session.getAttribute("loggedInUser");
+
 
         if (user != null) {
             order.setUserEmail(user.getEmail());
@@ -189,7 +189,7 @@ public class CheckoutController {
             orderItemService.save(item);
         }
 
-        cartService.clearCart();
+        cartService.clearCart(user);
 
         return "order-success";
     }

@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.servlet.http.HttpSession;
 import com.techstore.ecommercemaven.repository.OrderRepository;
 import com.techstore.ecommercemaven.repository.OrderItemRepository;
-import com.techstore.ecommercemaven.repository.ProductRepository;
-import com.techstore.ecommercemaven.model.Product;
+
 import com.techstore.ecommercemaven.model.OrderItem;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -23,20 +22,19 @@ public class MyOrdersController {
     private final OrderService orderService;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private final ProductRepository productRepository;
+
 
     public MyOrdersController(
             OrderService orderService,
             OrderRepository orderRepository,
-            OrderItemRepository orderItemRepository,
-            ProductRepository productRepository) {
+            OrderItemRepository orderItemRepository) {
 
         this.orderService = orderService;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
-        this.productRepository =productRepository;
 
     }
+
     @GetMapping("/my-orders")
     public String myOrders(
             HttpSession session,
@@ -56,6 +54,7 @@ public class MyOrdersController {
 
         return "my-orders";
     }
+
     @GetMapping("/order-details/{id}")
     public String orderDetails(
             @PathVariable Long id,
@@ -89,6 +88,7 @@ public class MyOrdersController {
 
         return "order-details";
     }
+
     @GetMapping("/track-order/{id}")
     public String trackOrder(
             @PathVariable Long id,
@@ -130,26 +130,10 @@ public class MyOrdersController {
             return "redirect:/order-details/" + id;
         }
 
-        List<OrderItem> orderItems =
-                orderItemRepository.findByOrderId(order.getId());
 
-        for (OrderItem item : orderItems) {
+        // Restore stock
+        orderService.restoreStock(order);
 
-            Product product =
-                    productRepository.findById(item.getProductId())
-                            .orElse(null);
-
-            if (product != null) {
-
-                int stock =
-                        product.getStock() == null ? 0 : product.getStock();
-
-                product.setStock(
-                        stock + item.getQuantity());
-
-                productRepository.save(product);
-            }
-        }
 
         order.setStatus("Cancelled");
 

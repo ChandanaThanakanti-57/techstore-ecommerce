@@ -1,18 +1,32 @@
 package com.techstore.ecommercemaven.service;
 
 import com.techstore.ecommercemaven.model.Order;
+import com.techstore.ecommercemaven.model.OrderItem;
+import com.techstore.ecommercemaven.model.Product;
 import com.techstore.ecommercemaven.repository.OrderRepository;
-import org.springframework.stereotype.Service;
-import java.util.List;
+import com.techstore.ecommercemaven.repository.OrderItemRepository;
+import com.techstore.ecommercemaven.repository.ProductRepository;
 
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 @Service
 public class OrderService {
 
 
     private final OrderRepository orderRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    private final OrderItemRepository orderItemRepository;
+    private final ProductRepository productRepository;
+
+    public OrderService(
+            OrderRepository orderRepository,
+            OrderItemRepository orderItemRepository,
+            ProductRepository productRepository) {
+
         this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
+        this.productRepository = productRepository;
     }
 
     public void saveOrder(Order order) {
@@ -42,4 +56,29 @@ public class OrderService {
     public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElse(null);
     }
+
+    public void restoreStock(Order order) {
+
+        List<OrderItem> orderItems =
+                orderItemRepository.findByOrderId(order.getId());
+
+        for (OrderItem item : orderItems) {
+
+            Product product =
+                    productRepository.findById(item.getProductId())
+                            .orElse(null);
+
+            if (product != null) {
+
+                int stock =
+                        product.getStock() == null ? 0 : product.getStock();
+
+                product.setStock(
+                        stock + item.getQuantity());
+
+                productRepository.save(product);
+            }
+        }
+    }
 }
+

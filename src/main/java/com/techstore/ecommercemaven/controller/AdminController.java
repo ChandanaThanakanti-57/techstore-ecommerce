@@ -20,7 +20,10 @@ import com.techstore.ecommercemaven.model.Coupon;
 import com.techstore.ecommercemaven.dto.MonthlyRevenueDTO;
 import com.techstore.ecommercemaven.service.AdminLogService;
 import com.techstore.ecommercemaven.repository.AdminLogRepository;
-
+import com.techstore.ecommercemaven.service.RefundService;
+import org.springframework.web.multipart.MultipartFile;
+import com.techstore.ecommercemaven.service.ProductService;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +41,9 @@ public class AdminController {
     private final EmailService emailService;
     private final AdminLogService adminLogService;
     private final AdminLogRepository adminLogRepository;
+    private final ProductService productService;
 
+    private final RefundService refundService;
 
     public AdminController(
             ProductRepository productRepository,
@@ -50,7 +55,9 @@ public class AdminController {
             ReviewRepository reviewRepository,
             EmailService emailService,
             AdminLogService adminLogService,
-            AdminLogRepository adminLogRepository) {
+            AdminLogRepository adminLogRepository,
+            RefundService refundService,
+            ProductService productService) {
 
         this.productRepository = productRepository;
         this.orderRepository = orderRepository;
@@ -62,6 +69,8 @@ public class AdminController {
         this.emailService = emailService;
         this.adminLogService = adminLogService;
         this.adminLogRepository = adminLogRepository;
+        this.refundService = refundService;
+        this.productService = productService;
     }
 
     @GetMapping("/admin")
@@ -154,23 +163,14 @@ public class AdminController {
     }
     @GetMapping("/admin/orders")
     public String adminOrders(
-            @RequestParam(required = false)
-            String search,
+                              @RequestParam(required = false) String search,
+                              Model model) {
 
-            Model model) {
-
-        if (search != null &&
-                !search.isBlank()) {
-
+        if (search != null && !search.isBlank()) {
             model.addAttribute(
                     "orders",
-
-                    orderRepository
-                            .findByCustomerNameContainingIgnoreCase(
-                                    search));
-        }
-        else {
-
+                    orderRepository.findByCustomerNameContainingIgnoreCase(search));
+        } else {
             model.addAttribute(
                     "orders",
                     orderRepository.findAll());
@@ -178,6 +178,7 @@ public class AdminController {
 
         return "admin-orders";
     }
+
     @GetMapping("/admin/orders/status")
     public String filterOrders(
 
@@ -193,6 +194,7 @@ public class AdminController {
     }
     @PostMapping("/admin/update-status")
     public String updateStatus(
+
             @RequestParam Long orderId,
             @RequestParam String status) {
 
@@ -248,6 +250,47 @@ public class AdminController {
 
         return "admin-products";
     }
+
+    @GetMapping("/admin/add-product")
+    public String showAddProductForm(Model model) {
+
+        model.addAttribute("product", new Product());
+
+        return "add-product";
+    }
+
+
+    @PostMapping("/admin/add-product")
+    public String addProduct(
+            Product product,
+            @RequestParam("image") MultipartFile image)
+            throws Exception {
+
+        if (!image.isEmpty()) {
+
+            String fileName = image.getOriginalFilename();
+
+            String uploadDir =
+                    System.getProperty("user.dir") + "/uploads/";
+
+            File dir = new File(uploadDir);
+
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            File destination = new File(dir, fileName);
+
+            image.transferTo(destination);
+
+            product.setImageUrl("/uploads/" + fileName);
+        }
+
+        productService.saveProduct(product);
+
+        return "redirect:/admin/products";
+    }
+
     @GetMapping("/admin/users")
     public String adminUsers(Model model) {
 
@@ -280,7 +323,8 @@ public class AdminController {
 
     @PostMapping("/admin/coupons/add")
     public String addCoupon(
-            @RequestParam String code,
+
+            @RequestParam String  code,
             @RequestParam double discountPercent) {
 
         Coupon coupon = new Coupon();
@@ -300,6 +344,7 @@ public class AdminController {
 
     @GetMapping("/admin/revenue-report")
     public String revenueReport(
+
             @RequestParam(required = false)
             String startDate,
 
@@ -386,5 +431,15 @@ public class AdminController {
 
         return "redirect:/admin/reviews";
     }
+
+    @GetMapping("/admin/refunds")
+    public String refunds(Model model) {
+
+        model.addAttribute("refunds",
+                refundService.getAllRefunds());
+
+        return "admin/refunds";
+    }
+
 
 }

@@ -1,0 +1,16 @@
+package com.techstore.ecommercemaven.repository;
+
+import com.techstore.ecommercemaven.model.Refund;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface RefundRepository extends JpaRepository<Refund, Long> {
+
+    List<Refund> findByUserEmail(String userEmail);
+
+    List<Refund> findByOrderId(Long orderId);
+
+}

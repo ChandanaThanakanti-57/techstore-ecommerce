@@ -195,6 +195,7 @@
 
                 <div class="mt-3">
 
+                    <!-- Cancel Order -->
                     <form th:if="${order.status == 'Paid'}"
                           th:action="@{'/cancel-order/' + ${order.id}}"
                           method="post">
@@ -207,6 +208,16 @@
                         </button>
 
                     </form>
+
+
+                    <!-- Request Return -->
+                    <a th:if="${order.status == 'Delivered'}"
+                       th:href="@{'/request-return/' + ${order.id}}"
+                       class="btn btn-danger mt-2">
+
+                        🔄 Request Return
+
+                    </a>
 
                 </div>
 

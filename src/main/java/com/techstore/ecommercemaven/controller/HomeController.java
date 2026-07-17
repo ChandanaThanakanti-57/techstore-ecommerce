@@ -35,45 +35,6 @@ public class HomeController {
         return "index";
     }
 
-    @GetMapping("/add-product")
-    public String showAddProductForm(Model model) {
-
-        model.addAttribute("product", new Product());
-
-        return "add-product";
-    }
-
-    @PostMapping("/add-product")
-    public String addProduct(
-            Product product,
-            @RequestParam("image") MultipartFile image)
-            throws Exception {
-
-        if (!image.isEmpty()) {
-
-            String fileName = image.getOriginalFilename();
-
-            String uploadDir =
-                    System.getProperty("user.dir") + "/uploads/";
-
-            File dir = new File(uploadDir);
-
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            File destination = new File(dir, fileName);
-
-            image.transferTo(destination);
-
-            product.setImageUrl("/uploads/" + fileName);
-        }
-
-        productService.saveProduct(product);
-
-        return "redirect:/admin/products";
-    }
-
     @GetMapping("/delete-product/{id}")
     public String deleteProduct(@PathVariable Long id) {
 

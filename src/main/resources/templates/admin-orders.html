@@ -77,6 +77,16 @@
                       th:if="${order.status == 'Delivered'}">
                     Delivered
                 </span>
+
+                <span class="badge bg-danger"
+                      th:if="${order.status == 'Cancelled'}">
+    Cancelled
+</span>
+
+                <span class="badge bg-secondary"
+                      th:if="${order.status == 'Returned'}">
+    Returned
+</span>
             </td>
 
             <td>
@@ -123,6 +133,19 @@
                     </button>
 
                 </form>
+
+                <div class="mt-2"
+                     th:if="${order.status == 'Cancelled'}">
+
+                    <a th:href="@{/admin/refund/create/{id}(id=${order.id})}"
+                       class="btn btn-warning btn-sm">
+
+                        Refund
+
+                    </a>
+
+                </div>
+
             </td>
 
         </tr>

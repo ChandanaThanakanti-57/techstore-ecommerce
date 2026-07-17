@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Refund Management</title>
+</head>
+
+<body>
+
+<h2>Refund Management</h2>
+
+<table border="1">
+
+    <tr>
+        <th>ID</th>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="refund : ${refunds}">
+
+        <td th:text="${refund.id}"></td>
+
+        <td th:text="${refund.orderId}"></td>
+
+        <td th:text="${refund.customerName}"></td>
+
+        <td th:text="${refund.refundAmount}"></td>
+
+        <td th:text="${refund.status}"></td>
+
+        <td>
+            <a th:if="${refund.status == 'PENDING'}"
+               th:href="@{/admin/refund-complete/{id}(id=${refund.id})}">
+                Mark Completed
+            </a>
+        </td>
+
+    </tr>
+
+</table>
+
+</body>
+</html>
