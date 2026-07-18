@@ -36,6 +36,7 @@ public class CheckoutController {
     private final EmailService emailService;
     private final ProductService productService;
 
+
     public CheckoutController(
             OrderService orderService,
             CartService cartService,
@@ -78,6 +79,8 @@ public class CheckoutController {
             @RequestParam(required = false)
             String paymentStatus,
 
+            @RequestParam String paymentMethod,
+
             HttpSession session) {
         User user =
                 (User) session.getAttribute("loggedInUser");
@@ -115,6 +118,7 @@ public class CheckoutController {
         order.setPhoneNumber(phoneNumber);
         order.setTotalAmount(total);
         order.setCouponCode(couponCode);
+        order.setPaymentMethod(paymentMethod);
         order.setStatus("Paid");
         order.setOrderDate(LocalDateTime.now());
 

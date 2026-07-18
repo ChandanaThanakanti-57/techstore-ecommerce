@@ -20,6 +20,7 @@ public class Order {
     private LocalDateTime orderDate;
     private String status;
     private String couponCode;
+    private String paymentMethod;
     @OneToMany(
             mappedBy = "order",
             cascade = CascadeType.ALL,
@@ -104,5 +105,13 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

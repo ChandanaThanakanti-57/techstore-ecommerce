@@ -47,7 +47,11 @@ public class RefundController {
             refund.setCustomerName(order.getCustomerName());
             refund.setUserEmail(order.getUserEmail());
             refund.setRefundAmount(order.getTotalAmount());
-            refund.setRefundMethod("Pending");
+
+            refund.setRefundMethod(order.getPaymentMethod());
+
+            refund.setStatus("COMPLETED");
+
             refund.setComments("Refund created for cancelled order");
 
             refundService.createRefund(refund);
