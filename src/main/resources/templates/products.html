@@ -45,42 +45,93 @@
     </style>
 </head>
 <body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <div class="container-fluid position-relative">
+
+        <!-- Center Logo -->
+        <a class="navbar-brand fw-bold position-absolute start-50 translate-middle-x"
+           th:href="@{/}">
+            Tech Store
+        </a>
+
+        <!-- Right-side Menu -->
+        <div class="ms-auto">
+
+            <!-- Before Login -->
+            <th:block th:if="${session.loggedInUser == null}">
+                <a class="nav-link d-inline text-white fw-bold me-3"
+                   th:href="@{/login}">
+                    Login
+                </a>
+            </th:block>
+
+            <!-- After Login -->
+            <th:block th:if="${session.loggedInUser != null}">
+
+
+                <a class="nav-link d-inline text-white fw-bold me-3"
+                   th:href="@{/products}">
+                    Products
+                </a>
+
+                <a class="nav-link d-inline text-white fw-bold me-3"
+                   th:href="@{/wishlist}">
+                    Wishlist
+                </a>
+
+                <a class="nav-link d-inline text-white fw-bold me-3"
+                   th:href="@{/cart}">
+                    Cart
+                </a>
+
+                <a class="nav-link d-inline text-white fw-bold me-3"
+                   th:href="@{/profile}">
+                    Profile
+                </a>
+
+                <th:block th:if="${session.loggedInUser.role == 'ADMIN'}">
+                    <a class="nav-link d-inline text-warning fw-bold me-3"
+                       th:href="@{/admin}">
+                        Admin
+                    </a>
+                </th:block>
+
+                <a class="nav-link d-inline text-danger fw-bold me-3"
+                   th:href="@{/logout}">
+                    Logout
+                </a>
+
+            </th:block>
+
+        </div>
+
+    </div>
+
+</nav>
+
 <p th:if="${user != null}">
     Welcome,
     <span th:text="${user.name}"></span>
 </p>
 
-<a th:href="@{/profile}" class="btn btn-info">
-    Profile
-</a>
-
-<a href="/cart" class="btn btn-outline-warning">
-    🛒 Cart
-</a>
-
-<a th:href="@{/my-orders}" class="btn btn-primary">
-    My Orders
-</a>
-
-<a th:href="@{/logout}" class="btn btn-danger">
-    Logout
-</a>
 <form action="/products/search"
       method="get"
-      class="row mb-4">
+      class="row g-3 align-items-end mt-2 mb-4">
 
-    <div class="col-md-5">
+    <div class="col-md-5 position-relative">
 
         <input type="text"
                id="searchBox"
                name="keyword"
-               class="form-control mt-3"
+               class="form-control"
                placeholder="Search products">
+
         <div id="suggestionsBox"
              class="list-group position-absolute w-100 shadow"
              style="z-index:1000;">
         </div>
-
 
     </div>
 
@@ -90,18 +141,9 @@
                 class="form-select">
 
             <option value="">All Categories</option>
-
-            <option value="Electronics">
-                Electronics
-            </option>
-
-            <option value="Accessories">
-                Accessories
-            </option>
-
-            <option value="Laptop">
-                Laptop
-            </option>
+            <option value="Electronics">Electronics</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Laptop">Laptop</option>
 
         </select>
 
@@ -111,49 +153,12 @@
 
         <button type="submit"
                 class="btn btn-primary w-100">
-
             Search
-
         </button>
 
     </div>
 
 </form>
-
-
-<nav class="navbar navbar-dark bg-dark">
-
-    <div class="container-fluid position-relative">
-
-        <a class="navbar-brand position-absolute start-50 translate-middle-x"
-           href="/">
-            Tech Store
-        </a>
-
-        <div class="ms-auto">
-
-            <th:block th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ADMIN'}">
-                <a href="/admin" class="nav-link d-inline text-white">
-                    Admin
-                </a>
-            </th:block>
-
-            <a href="/login" class="nav-link d-inline text-white">
-                Login
-            </a>
-
-            <a href="/register" class="nav-link d-inline text-white">
-                Register
-            </a>
-
-            <a href="/refunds" class="btn btn-info">
-                My Refunds
-            </a>
-        </div>
-
-    </div>
-
-</nav>
 
 <div class="container mt-4">
 
