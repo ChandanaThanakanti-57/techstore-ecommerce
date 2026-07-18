@@ -64,4 +64,7 @@ public class RefundService {
 
         return refundRepository.findByUserEmail(email);
     }
+    public List<Refund> getRefundsByUserEmail(String email) {
+        return refundRepository.findByUserEmail(email);
+    }
 }

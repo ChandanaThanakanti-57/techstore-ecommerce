@@ -7,7 +7,8 @@
 
 <h1>Add Product</h1>
 
-<form th:action="@{/add-product}"
+
+<form th:action="@{/admin/add-product}"
       th:object="${product}"
       method="post"
       enctype="multipart/form-data">
@@ -52,17 +53,6 @@
                class="form-control"
                th:field="*{stock}">
     </div>
-
-    <label>Rating</label>
-
-    <input type="number"
-           name="rating"
-           class="form-control">
-
-    <label>Review</label>
-
-    <textarea name="review"
-              class="form-control"></textarea>
 
     <button type="submit">
         Add Product

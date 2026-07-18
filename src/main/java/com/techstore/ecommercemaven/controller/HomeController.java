@@ -10,6 +10,9 @@ import com.techstore.ecommercemaven.model.Review;
 import com.techstore.ecommercemaven.repository.ReviewRepository;
 import com.techstore.ecommercemaven.dto.ProductSuggestion;
 import com.techstore.ecommercemaven.repository.OrderItemRepository;
+import jakarta.servlet.http.HttpSession;
+import com.techstore.ecommercemaven.model.User;
+import com.techstore.ecommercemaven.service.RefundService;
 
 import java.io.File;
 import java.util.List;
@@ -20,14 +23,17 @@ public class HomeController {
     private final ProductService productService;
     private final ReviewRepository reviewRepository;
     private final OrderItemRepository orderItemRepository;
+    private final RefundService refundService;
     public HomeController(
             ProductService productService,
             ReviewRepository reviewRepository,
-            OrderItemRepository orderItemRepository) {
+            OrderItemRepository orderItemRepository,
+            RefundService refundService) {
 
         this.productService = productService;
         this.reviewRepository = reviewRepository;
         this.orderItemRepository = orderItemRepository;
+        this.refundService = refundService;
     }
 
     @GetMapping("/")
@@ -197,5 +203,22 @@ public class HomeController {
                 "D:/EcommerceWebsite/IdeaProjects/ecommerce-Maven/uploads/laptop.png");
 
         return file.exists() + " : " + file.getAbsolutePath();
+    }
+
+    @GetMapping("/refunds")
+    public String myRefunds(HttpSession session, Model model) {
+
+        User user = (User) session.getAttribute("loggedInUser");
+
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute(
+                "refunds",
+                refundService.getRefundsByUserEmail(user.getEmail())
+        );
+
+        return "refunds";
     }
 }

@@ -11,7 +11,7 @@ public class Review {
 
     private String userName;
 
-    private int rating;
+    private double rating;
 
     private String comment;
 
@@ -34,7 +34,7 @@ public class Review {
         return userName;
     }
 
-    public int getRating() {
+    public double getRating() {
         return rating;
     }
 
